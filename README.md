@@ -31,6 +31,7 @@ Create a `.env` file in the project root and add your credentials:
 ```env
 PORT=3000
 MONGODB_URI=YOUR_MONGODB_URI (e.g., mongodb://localhost:27017)
+SESSION_SECRET= feel free to add your own Secret key
 DB_NAME=YOUR_DB_NAME
 ```
 
