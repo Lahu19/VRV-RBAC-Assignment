@@ -1,0 +1,180 @@
+<%- include('layouts/header') %>
+<h1 class="table">Manage Users</h1>
+
+<table class="table">
+  <thead>
+    <th>Sr.No</th>
+    <th>user ID</th>
+    <th>Email</th>
+    <th>Role</th>
+    <th>Permissions</th>
+  </thead>
+  <tbody>
+    <% users.forEach((user, i) => { %>
+    <tr>
+      <td><%= i+1 %></td>
+      <td><%= user.id %></td>
+      <td><a href="/admin/user/<%= user.id %>"><%= user.email %></a></td>
+      <td>
+        <form
+          action="/admin/update-role"
+          method="post"
+          class="manage-user-form"
+        >
+          <input type="hidden" name="id" value="<%= user.id %>" />
+          <select
+            name="role"
+            id="role-<%= user.id %>"
+            class="role-select"
+            data-id="<%= user.id %>"
+          >
+            <option value="ADMIN" <%= user.role === 'ADMIN' ? 'selected' : '' %>>Admin</option>
+            <option value="MODERATOR" <%= user.role === 'MODERATOR' ? 'selected' : '' %>>Moderator</option>
+            <option value="CLIENT" <%= user.role === 'CLIENT' ? 'selected' : '' %>>Client</option>
+          </select>
+          <input type="submit" value="Update">
+        </form>
+      </td>
+      <td>
+        <form class="permissions-form">
+          <label class="checkbox-container">
+            <input
+              type="checkbox"
+              name="view"
+              value="true"
+              id="view-<%= user.id %>"
+              checked
+              disabled
+            />
+            View
+            <span class="checkmark"></span>
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="edit"
+              value="true"
+              id="edit-<%= user.id %>"
+              <%= ['ADMIN', 'MODERATOR'].includes(user.role) ? 'checked' : '' %>
+              <%= user.role === 'CLIENT' ? 'disabled' : '' %>
+            />
+            Edit
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="post"
+              value="true"
+              id="post-<%= user.id %>"
+              <%= user.role === 'ADMIN' ? 'checked' : '' %>
+              <%= user.role !== 'ADMIN' ? 'disabled' : '' %>
+            />
+            Post
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="upgrade"
+              value="true"
+              id="upgrade-<%= user.id %>"
+              <%= user.role === 'ADMIN' ? 'checked' : '' %>
+              <%= user.role !== 'ADMIN' ? 'disabled' : '' %>
+            />
+            Upgrade
+          </label>
+        </form>
+      </td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<style>
+  /* Styling for the green tick */
+  .checkbox-container {
+    position: relative;
+    display: inline-block;
+    padding-left: 25px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .checkbox-container input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .checkbox-container .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #ccc;
+    border-radius: 3px;
+  }
+
+  .checkbox-container input[type="checkbox"]:checked + .checkmark {
+    background-color: #28a745; /* Green background for checked state */
+  }
+
+  .checkbox-container .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  .checkbox-container input[type="checkbox"]:checked + .checkmark:after {
+    display: block;
+  }
+
+  .checkbox-container .checkmark:after {
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+</style>
+
+<script>
+  // JavaScript to dynamically update checkboxes based on the selected role
+  document.querySelectorAll('.role-select').forEach(select => {
+    select.addEventListener('change', event => {
+      const userId = event.target.dataset.id;
+      const role = event.target.value;
+
+      // Update permissions checkboxes based on the selected role
+      const viewCheckbox = document.getElementById(`view-${userId}`);
+      const editCheckbox = document.getElementById(`edit-${userId}`);
+      const postCheckbox = document.getElementById(`post-${userId}`);
+      const upgradeCheckbox = document.getElementById(`upgrade-${userId}`);
+
+      // Default: All checkboxes disabled
+      editCheckbox.checked = false;
+      editCheckbox.disabled = true;
+      postCheckbox.checked = false;
+      postCheckbox.disabled = true;
+      upgradeCheckbox.checked = false;
+      upgradeCheckbox.disabled = true;
+
+      // Enable permissions based on role
+      if (role === 'ADMIN') {
+        editCheckbox.checked = true;
+        editCheckbox.disabled = false;
+        postCheckbox.checked = true;
+        postCheckbox.disabled = false;
+        upgradeCheckbox.checked = true;
+        upgradeCheckbox.disabled = false;
+      } else if (role === 'MODERATOR') {
+        editCheckbox.checked = true;
+        editCheckbox.disabled = false;
+      }
+    });
+  });
+</script>
+
+<%- include('layouts/footer') %>

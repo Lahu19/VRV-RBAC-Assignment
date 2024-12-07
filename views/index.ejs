@@ -1,0 +1,70 @@
+<%- include('./layouts/header') %>
+
+<style>
+  @keyframes fadeInOut {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+
+  @keyframes slideIn {
+    0% {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+ 
+
+
+  
+  .services-info {
+    animation: slideIn 1s ease-out;
+    padding: 2rem;
+    background-color: hsl(205, 83%, 53%);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(16, 5, 168, 0.1);
+  }
+
+  .title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin: 1rem 0;
+    animation: slideIn 1s ease-out 0.5s;
+  }
+</style>
+
+<body>
+  
+  <div class="welcome-message">Welcome to VRV Security</div>
+
+  <h1 class="title">Services We Offer</h1>
+  <div class="services-info">
+    <ol class="services-info">
+      <h3>Security Consulting</h3>
+      <li><b>AI-Powered VAPT</b></li>
+      <li><b>Cloud Infrastructure VAPT</b></li>
+      <li><b>Enterprise Infrastructure VAPT</b></li>
+      <li><b>24/7 Threat Monitoring & SOC</b></li>
+    </ol>
+  </div>
+
+  <%- include('./layouts/footer') %>
+
+  <script>
+    
+    setTimeout(() => {
+      document.querySelector('.welcome-message').style.display = 'none';
+    }, 5000);
+  </script>
+</body>
